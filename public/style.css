@@ -1,0 +1,14 @@
+:root{
+  --c-cyan: #00bcd4;
+  --c-gray: #bdbdbd;
+  --c-white: #ffffff;
+  --bg: #f7f9fb;
+}
+body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background: var(--bg); color:#222; margin:0;}
+.top{ background: linear-gradient(90deg, var(--c-gray), var(--c-cyan)); color:var(--c-white); padding:20px; text-align:center;}
+.top h1{ margin:0; font-size:28px; letter-spacing:1px;}
+.subtitle{ margin:6px 0 0; opacity:0.9;}
+.container{ display:flex; gap:20px; padding:20px;}
+section{ background:#fff; border-radius:10px; padding:16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); flex:1;}
+#list .item, #consult-list .item{ padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;}
+.btn{ padding:6px 10px; border-radius:6px; background:var(--c-cyan); color:#fff; text-decoration:none; font-weight:600;}

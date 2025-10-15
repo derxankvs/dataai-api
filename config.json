@@ -1,0 +1,14 @@
+{
+  "infinitepay_token": "",
+  "infinitepay_handle": "dataai",
+  "webhook": {
+    "url": "https://discord.com/api/webhooks/1426620878313095391/pxZNksjE8PjLwfQUCUtk-gZU-Y-Q82x_IqyUbUxVY8Ls3TnjgHpTB6JEyQj45WslSn-Z"
+  },
+  "owner": "Kaio",
+  "theme": {
+    "primary": "#00bcd4",
+    "secondary": "#9e9e9e",
+    "background": "#ffffff",
+    "name": "Data Ai"
+  }
+}

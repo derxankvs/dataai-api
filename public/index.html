@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data AI - Login e Cadastro</title>
+<style>
+  * { box-sizing: border-box; font-family: Poppins, sans-serif; }
+  body {
+    background: linear-gradient(135deg, #636363, #0e1b24);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    height: 100vh; margin: 0;
+  }
+  .container {
+    width: 370px; height: 440px;
+    perspective: 1000px;
+  }
+  .card {
+    width: 100%; height: 100%;
+    background: #1a1f27;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,255,255,0.2);
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+  }
+  .card.flip { transform: rotateY(180deg); }
+
+  .side {
+    position: absolute; width: 100%; height: 100%;
+    padding: 30px;
+    backface-visibility: hidden;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+  }
+  h1 { color: #00ffff; margin-bottom: 15px; }
+  .side input {
+    width: 100%; padding: 10px; margin: 8px 0;
+    border: none; border-radius: 6px;
+    background: #222b35; color: white;
+  }
+  button {
+    width: 100%; padding: 10px;
+    background: #00ffff; color: #000;
+    border: none; border-radius: 6px;
+    cursor: pointer; font-weight: 600;
+    transition: all .2s;
+  }
+  button:hover { background: #0cf5ff; transform: scale(1.03); }
+  .flip-btn {
+    background: none; color: #ccc;
+    text-decoration: underline; margin-top: 10px;
+    cursor: pointer;
+  }
+  /* Verso do card */
+  .back { transform: rotateY(180deg); }
+
+  /* Dashboard */
+  #dashboard {
+    display: none; flex-direction: column;
+    align-items: center; gap: 20px; width: 90%;
+    max-width: 700px;
+  }
+  .info {
+  position: relative;
+  background: linear-gradient(145deg, #1f2733, #242e3b);
+  border: 2px solid #00ffff33;
+  border-radius: 20px;
+  padding: 25px 30px;
+  width: 90%;
+  max-width: 600px;
+  margin: 40px auto 20px auto;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+}
+
+.info h3 {
+  color: #00ffff;
+  margin-top: 0;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.info p {
+  color: #cfd8dc;
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+  .panel {
+    background: #1f2733; padding: 20px;
+    border-radius: 10px; width: 100%;
+  }
+  .panel h3 { color: #00ffff; margin-top: 0; }
+  .panel input, .panel textarea {
+    width: 100%; margin: 5px 0; padding: 10px;
+    border: none; border-radius: 6px;
+    background: #222b35; color: #fff;
+  }
+  .panel button { margin-top: 5px; }
+  .result {
+    background: #12181f; padding: 10px;
+    border-radius: 8px; margin-top: 10px;
+    overflow: auto; max-height: 150px;
+    font-family: monospace; font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN / CADASTRO -->
+<div class="container">
+  <div class="card" id="card">
+
+    <!-- LOGIN -->
+    <div class="side front">
+      <h1>Logar</h1>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginSenha" placeholder="Senha">
+      <button onclick="login()">Entrar</button>
+      <div class="flip-btn" onclick="flipCard()">Não tem conta? Cadastre-se</div>
+    </div>
+
+    <!-- CADASTRO -->
+    <div class="side back">
+      <h1>Cadastro</h1>
+      <input type="text" id="cadNome" placeholder="Nome da sua key">
+      <input type="email" id="cadEmail" placeholder="Email">
+      <input type="password" id="cadSenha" placeholder="Senha">
+      <button onclick="cadastro()">Cadastrar</button>
+      <div class="flip-btn" onclick="flipCard()">Já tem conta? Fazer login</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="info">
+    <h3>👤 Usuário logado</h3>
+    <button id="logoutBtn" style="margin-top:10px;background:#ff5555;color:#fff;">🔒 Logout</button>
+    <p><b>Nome:</b> <span id="userNome"></span></p>
+    <p><b>Email:</b> <span id="userEmail"></span></p>
+    <p><b>Senha:</b> <span id="userSenha"></span></p>
+  </div>
+
+  <div class="panel">
+    <h3>🔑 Gerar Key</h3>
+    <button onclick="gerarKey()">Gerar key para mim</button>
+    <p id="keyResult" style="margin-top:10px;color:#0cf;"></p>
+  </div>
+
+  <div class="panel">
+    <h3>📁 Armazenar dados JSON</h3>
+    <input id="userKey" placeholder="Digite sua key">
+    <textarea id="jsonData" placeholder='{"meu":"json"}'></textarea>
+    <button onclick="salvarJson()">Salvar</button>
+    <div class="result" id="saveResult"></div>
+  </div>
+
+  <div class="panel">
+    <h3>🔍 Consultar dados</h3>
+    <input id="tipoConsulta" placeholder="Tipo (ex: cep, cnpj, ip)">
+    <input id="valorConsulta" placeholder="Valor (ex: 01001000)">
+    <button onclick="consultar()">Consultar</button>
+    <div class="result" id="consultaResult"></div>
+  </div>
+</div>
+
+<script>
+  const card = document.getElementById('card');
+  const dash = document.getElementById('dashboard');
+  let usuario = null;
+
+  function flipCard() {
+    card.classList.toggle('flip');
+  }
+
+  function cadastro() {
+    const nome = document.getElementById('cadNome').value.trim();
+    const email = document.getElementById('cadEmail').value.trim();
+    const senha = document.getElementById('cadSenha').value.trim();
+    if (!nome || !email || !senha) return alert('Preencha todos os campos!');
+    localStorage.setItem('dataai_user', JSON.stringify({ nome, email, senha }));
+    alert('Cadastro realizado! Agora faça login.');
+    flipCard();
+  }
+
+  function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const senha = document.getElementById('loginSenha').value.trim();
+    const user = JSON.parse(localStorage.getItem('dataai_user') || '{}');
+    if (user.email === email && user.senha === senha) {
+      usuario = user;
+      document.querySelector('.container').style.display = 'none';
+      dash.style.display = 'flex';
+      document.getElementById('userNome').textContent = user.nome;
+      document.getElementById('userEmail').textContent = user.email;
+      document.getElementById('userSenha').textContent = user.senha;
+    } else {
+      alert('Email ou senha incorretos.');
+    }
+  }
+
+  async function gerarKey() {
+    if (!usuario) return alert('Faça login.');
+    const key = `data-${usuario.nome.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+    document.getElementById('keyResult').textContent = `Sua key: ${key}`;
+    document.getElementById('userKey').value = key;
+  }
+
+  async function salvarJson() {
+    const key = document.getElementById('userKey').value.trim();
+    const data = document.getElementById('jsonData').value.trim();
+    if (!key || !data) return alert('Preencha a key e o JSON.');
+    try {
+      const res = await fetch(`/a/key=${key}/json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: data
+      });
+      const json = await res.json();
+      document.getElementById('saveResult').textContent = JSON.stringify(json, null, 2);
+    } catch (e) {
+      document.getElementById('saveResult').textContent = e.message;
+    }
+  }
+
+  async function consultar() {
+    const tipo = document.getElementById('tipoConsulta').value.trim();
+    const valor = document.getElementById('valorConsulta').value.trim();
+    if (!tipo || !valor) return alert('Preencha tipo e valor.');
+    try {
+      const res = await fetch(`/${tipo}/${valor}/json`);
+      const json = await res.json();
+      document.getElementById('consultaResult').textContent = JSON.stringify(json, null, 2);
+    } catch (e) {
+      document.getElementById('consultaResult').textContent = e.message;
+    }
+  }
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('dataai_user'); // remove usuário do localStorage
+  usuario = null;
+  dash.style.display = 'none';
+  document.querySelector('.container').style.display = 'flex';
+  // limpa campos
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginSenha').value = '';
+});
+
+</script>
+
+</body>
+</html>
