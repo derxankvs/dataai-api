@@ -42,7 +42,7 @@ function safeFilename(name) {
 }
 
 // 1️⃣ Armazenar dados JSON
-app.post('/a/key=:key/json', (req, res) => {
+app.post('/a/key=:key/js', (req, res) => {
   try {
     const key = safeFilename(req.params.key);
 
@@ -62,16 +62,16 @@ app.post('/a/key=:key/json', (req, res) => {
     return res.json({
       success: true,
       message: 'Arquivo salvo na pasta do usuário!',
-      file: `/a/key=${key}/json`,
-      view: `${baseUrl}/a/key=${key}/json/view?user=${user}`,
-      download: `${baseUrl}/a/key=${key}/json/download?user=${user}`
+      file: `/a/key=${key}/js`,
+      view: `${baseUrl}/a/key=${key}/js/view?user=${user}`,
+      download: `${baseUrl}/a/key=${key}/je/download?user=${user}`
     });
   } catch (e) {
     return res.status(500).json({ success:false, error: e.message });
   }
 });
 
-app.get('/a/key=:key/json/view', (req,res)=>{
+app.get('/a/key=:key/js/view', (req,res)=>{
   const key = safeFilename(req.params.key);
   const user = req.query.user || 'guest';
   const file = path.join(DATA_DIR, safeFilename(user), key+'.json');
@@ -79,7 +79,7 @@ app.get('/a/key=:key/json/view', (req,res)=>{
   res.sendFile(file);
 });
 
-app.get('/a/key=:key/json/download', (req,res)=>{
+app.get('/a/key=:key/js/download', (req,res)=>{
   const key = safeFilename(req.params.key);
   const user = req.query.user || 'guest';
   const file = path.join(DATA_DIR, safeFilename(user), key+'.json');
@@ -87,7 +87,7 @@ app.get('/a/key=:key/json/download', (req,res)=>{
   res.download(file, key+'.json');
 });
 
-app.get('/a/key=:key/json/download', (req, res) => {
+app.get('/a/key=:key/js/download', (req, res) => {
   const key = safeFilename(req.params.key);
   const file = path.join(DATA_DIR, key + '.json');
   if (!fs.existsSync(file)) return res.status(404).json({ success: false, message: 'Arquivo não encontrado' });
@@ -174,7 +174,7 @@ app.post('/gerar-key', (req, res) => {
 
 
 // 4️⃣ Armazenar consultas
-app.post('/a/consultas/json', (req, res) => {
+app.post('/a/consultas/js', (req, res) => {
   try {
     const consultasFile = path.join(DATA_DIR, 'consultas.json');
     let arr = JSON.parse(fs.readFileSync(consultasFile, 'utf-8') || '[]');
@@ -187,11 +187,11 @@ app.post('/a/consultas/json', (req, res) => {
   }
 });
 
-app.get('/a/consultas/json/view', (req, res) => {
+app.get('/a/consultas/js/view', (req, res) => {
   res.sendFile(path.join(DATA_DIR, 'consultas.json'));
 });
 
-app.get('/a/consultas/json/download', (req, res) => {
+app.get('/a/consultas/js/download', (req, res) => {
   res.download(path.join(DATA_DIR, 'consultas.json'), 'consultas.json');
 });
 
@@ -275,9 +275,9 @@ app.get('/info', (req, res) => {
     api: 'DataAI',
     version: '3.0',
     endpoints: {
-      armazenamento: '/a/key={key}/json',
+      armazenamento: '/a/key={key}/js',
       consultas: '/tipo/dado/json',
-      historico_consultas: '/a/consultas/json',
+      historico_consultas: '/a/consultas/js',
       pagamento: '/pagar',
       obrigado: '/obrigado',
       webhook: '/webhook'
